@@ -25,7 +25,12 @@
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
-  </dependencies>
+    <dependency>
+      <groupId>com.google</groupId>
+      <artifactId>bitcoinj</artifactId>
+      <version>0.11.3</version>
+      <scope>compile</scope>
+  </dependency>  </dependencies>
 
   <build>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
@@ -69,6 +74,100 @@
           <artifactId>maven-project-info-reports-plugin</artifactId>
           <version>3.0.0</version>
         </plugin>
+
+        <!-- https://jasonfavrod.com/maven-compiling-jar-with-dependencies/ -->
+        <!-- mvn clean compile assembly:single -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>2.4.1</version>
+          <configuration>
+              <!-- get all project dependencies -->
+              <descriptorRefs>
+                  <descriptorRef>jar-with-dependencies</descriptorRef>
+              </descriptorRefs>
+              <!-- MainClass in mainfest make a executable jar -->
+              <archive>
+                <manifest>
+                  <mainClass>com.crtp.app.App</mainClass>
+                </manifest>
+              </archive>
+
+          </configuration>
+          <executions>
+            <execution>
+              <id>make-assembly</id>
+                                  <!-- bind to the packaging phase -->
+              <phase>package</phase>
+              <goals>
+                  <goal>single</goal>
+              </goals>
+            </execution>
+          </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>de.ntcomputer</groupId>
+        <artifactId>executable-packer-maven-plugin</artifactId>
+        <version>1.0.1</version>
+        <configuration>
+            <mainClass>com.crtp.app.App</mainClass>
+        </configuration>
+        <executions>
+            <execution>
+                <goals>
+                    <goal>pack-executable-jar</goal>
+                </goals>
+            </execution>
+        </executions>
+      </plugin>
+
+
+      <!--
+      <plugin> 
+        <artifactId>maven-dependency-plugin</artifactId> 
+        <executions> 
+          <execution> 
+            <phase>install</phase> 
+              <goals> 
+                <goal>copy-dependencies</goal> 
+              </goals> 
+              <configuration> 
+                 <outputDirectory>${project.build.directory}/lib</outputDirectory> 
+              </configuration> 
+            </execution> 
+          </executions> 
+        </plugin> 
+      -->    
+
+      <!-- http://www.jcgonzalez.com/maven-just-copy-dependencies -->
+      <!-- mvn dependency:copy-dependencies -Dclassifier=sources -DoutputDirectory=yourfoldername -Dhttps.protocols=TLSv1.2 -->
+      <!-- command I ran: mvn dependency:copy-dependencies -DoutputDirectory=lib -Dhttps.protocols=TLSv1.2 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.7</version>
+        <executions>
+            <execution>
+                <id>default-cli</id>
+                <configuration>
+                    <artifactItems>
+                        <artifactItem>
+                            <!-- hardcode values, or use properties, depending on what you want
+                                to do -->
+                            <groupId>TestMaven</groupId>
+                            <artifactId>TestMaven</artifactId>
+                            <version>0.0.1-SNAPSHOT</version>
+                            <type>[ packaging ]</type>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                        </artifactItem>
+                    </artifactItems>
+                    <!-- other configurations here -->
+                </configuration>
+            </execution>
+        </executions>
+      </plugin>
+
       </plugins>
     </pluginManagement>
   </build>
