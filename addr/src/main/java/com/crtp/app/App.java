@@ -4,8 +4,11 @@ import com.google.bitcoin.core.ECKey;
 import com.google.bitcoin.core.NetworkParameters;
 import com.google.bitcoin.core.Address;
 
+import java.util.Properties;
+import java.io.FileInputStream;
+
+
 /**
- * Hello world!
  *
  */
 public class App  {
@@ -39,6 +42,18 @@ public class App  {
         Address addressFromKey = key.toAddress(netParams);
         
         System.out.println("On the " + net + " network, we can use this address:\n" + addressFromKey);
-        
+
+        try {
+
+            Properties configFile = new Properties();
+            try (FileInputStream i = new FileInputStream(configFile)) {
+                configProps.load(i);
+            }
+
+        } catch(Exception ex){
+            System.out.println(ex.toString())
+        }
+  
+
     }
 }
