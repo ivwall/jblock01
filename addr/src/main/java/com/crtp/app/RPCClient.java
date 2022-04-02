@@ -25,6 +25,7 @@ public class RPCClient {
 	private static final String COMMAND_GET_INFO = "getinfo";
 	private static final String COMMAND_GET_NEW_ADDRESS = "getnewaddress";
 	private static final String COMMAND_GET_BLOCK_COUNT = "getblockcount";
+    private static final String COMMAND_GET_BLOCK_HASH = "getblockhash";
 
 	private JSONObject invokeRPC(String id, String method, List<String> params) {
 		DefaultHttpClient httpclient = new DefaultHttpClient();
@@ -108,4 +109,22 @@ public class RPCClient {
 		return null;
 	}
 
+    public JSONObject getBlockHash() {
+		//String[] params = { account };
+        String[] params = {"92938"};
+		JSONObject json = invokeRPC(UUID.randomUUID().toString(), COMMAND_GET_BLOCK_HASH, Arrays.asList(params));
+        Class cls = json.getClass();
+        System.out.println("json class "+cls.getName());
+        System.out.println(json);
+		//return (JSONObject)json.get("result");
+		return null;
+	}
+
+    /***
+	public Double getBalance(String account) {
+		String[] params = { account };
+		JSONObject json = invokeRPC(UUID.randomUUID().toString(), COMMAND_GET_BALANCE, Arrays.asList(params));
+		return (Double)json.get("result");
+	}
+    */
 }

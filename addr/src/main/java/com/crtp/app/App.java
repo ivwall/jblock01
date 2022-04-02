@@ -125,5 +125,14 @@ public class App  {
             System.out.println(json.toString());
         }
 
+        json = client.getBlockHash();
+        if (json == null) {
+            System.out.println("null result");
+        } else {
+            System.out.println(json.toString());
+        }
+
+
+
     }
 }
